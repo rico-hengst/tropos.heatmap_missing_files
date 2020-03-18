@@ -47,8 +47,29 @@ In general
 * Python version 3.x
 
 ## Usage
+... see also python script ```plthtmp.py```
+
 ```
-python PlotHeatmap
+import PlotHeatmap
+
+
+# used data are imported from csv file
+PlotHeatmap.main(
+    { 
+    'data_import'      : 'CSV', # Test|DataFrame|CSV
+    'picture_filename' : 'test/mypic_testfile_csv',
+    'csv_filename'     : 'test/test_missing_files.csv'
+    }
+)
+
+# used data are provided as panda DataFrame
+PlotHeatmap.main(
+    { 
+    'data_import'      : 'DataFrame', # Test|DataFrame|CSV
+    'picture_filename' : 'test/mypic_external_dataframe',
+    'DataFrame'        : df
+    }
+)
 ```
 
 ## Author
