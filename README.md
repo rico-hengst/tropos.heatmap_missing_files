@@ -10,7 +10,7 @@ The software package is written to visualize data similar to the
 [github contribution chart](https://help.github.com/en/github/setting-up-and-managing-your-github-profile/viewing-contributions-on-your-profile).
 ![PlotHeatmap](doc/PlotHeatmap.png)
 
-<img src="https://gitea.tropos.de/hengst/sat.missing_files/raw/branch/master/doc/PlotHeatmap.png" alt="Girl in a jacket" style="width:500px;height:100px;">
+<img src="https://gitea.tropos.de/hengst/sat.missing_files/raw/branch/master/doc/PlotHeatmap.png" alt="Girl in a jacket"  width=500px height=100px>
 
 ## Assumption
 This package is **not prepared for collecting** the data.
