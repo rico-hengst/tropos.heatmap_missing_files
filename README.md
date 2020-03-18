@@ -1,5 +1,5 @@
-# Create Heatmap of missing file
 [![License: CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/80x15.png)](https://creativecommons.org/licenses/by-sa/4.0/)
+# Create Heatmap of missing file
 
 The repo contains a python3 module to visualize subjects (e.g. missing files) - hereafter refered as data - in a heatmap with daily resolution.
 
@@ -75,3 +75,7 @@ PlotHeatmap.main(
 
 ## Author
 * Rico Hengst ![Logo](doc/ORCIDiD_icon16x16.png) [https://orcid.org/0000-0001-8994-5868](https://orcid.org/0000-0001-8994-5868)
+
+## Copyright and license
+
+This application is free software, licensed under CC-BY-SA. The copyright (c) 2020 belongs to Rico Hengst.
