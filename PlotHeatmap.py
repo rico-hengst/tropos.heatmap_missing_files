@@ -62,15 +62,6 @@ def generate_test_data():
     ts = pd.to_datetime("2019-09-09 18:47:05.487", format="%Y-%m-%d %H:%M:%S.%f")
     df =df.append({'date' : ts , 'commit' : 1},ignore_index=True)
 
-    # sort data
-    df = df.sort_index(ascending=1)
-
-
-    df['week'] = df['date'].dt.week
-    df['dayofweek'] = df['date'].dt.dayofweek;
-  
-    # https://strftime.org/
-    df['week_in_year'] = df['date'].dt.strftime('%Y-%W');
     
     return df
 
@@ -78,6 +69,10 @@ def generate_test_data():
 
 # ## Rename DataFrame columns
 def rename_external_df_columns( df ):
+    
+    if not isinstance(df, pd.DataFrame):
+        logging.warning('Provided or generated variable is not a DataFrame ') 
+        exit()
     
     # get header name
     org_header = list(df.columns.values)
@@ -92,6 +87,21 @@ def rename_external_df_columns( df ):
     return df
 
 
+
+# ## Add columns to df
+def add_df_columns( df ):
+    
+    # sort data
+    df = df.sort_index(ascending=1)
+
+
+    df['week'] = df['date'].dt.week
+    df['dayofweek'] = df['date'].dt.dayofweek;
+  
+    # https://strftime.org/
+    df['week_in_year'] = df['date'].dt.strftime('%Y-%W');
+    
+    return df
 
 # ## Read data from File
 
@@ -129,10 +139,6 @@ def read_csv_file(csv_filename):
     # transform column date to datetime
     df['date'] =  pd.to_datetime(df['date'])
 
-    # add further columns
-    df['week'] = df['date'].dt.week
-    df['dayofweek'] = df['date'].dt.dayofweek;
-    df['week_in_year'] = df['date'].dt.strftime('%Y-%W');
 
     # sort data
     df = df.sort_values(by='date', ascending=1)
@@ -383,6 +389,8 @@ def main( myDict ):
         logging.warning('Provided or generated variable is not a DataFrame ') 
         exit()
         
+    # add columns
+    df = add_df_columns( df )
     
     # generate filled dataframe
     df_filled = group_fill_data( df )
