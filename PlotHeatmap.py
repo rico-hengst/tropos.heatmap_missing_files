@@ -55,15 +55,17 @@ def generate_test_data():
     # create DataFrame
     df = pd.DataFrame(date_rng, columns=['date']) # dtype: datetime64[ns]
 
-    df['commit'] = np.random.randint(0,3,size=(len(date_rng)))
-    org_header = ['date','commit']
+    df['missing_files_intern'] = np.random.randint(0,3,size=(len(date_rng)))
+    
 
     # add a data element
     ts = pd.to_datetime("2019-09-09 18:47:05.487", format="%Y-%m-%d %H:%M:%S.%f")
-    df =df.append({'date' : ts , 'commit' : 1},ignore_index=True)
+    df =df.append({'date' : ts , 'missing_files_intern' : 1},ignore_index=True)
 
+    # get header name
+    org_header = list(df.columns.values)
     
-    return df
+    return df, org_header
 
 
 
@@ -84,7 +86,7 @@ def rename_external_df_columns( df ):
     # rename columns
     df = df.rename(columns={org_header[0]: "date", org_header[1]: "commit"})
     
-    return df
+    return df, org_header
 
 
 
@@ -143,7 +145,7 @@ def read_csv_file(csv_filename):
     # sort data
     df = df.sort_values(by='date', ascending=1)
     
-    return df
+    return df, org_header
 
 
 # ## Group data and fill values
@@ -260,7 +262,7 @@ def create_matrix_from_grouped_filled_dataframe( df_filled ):
 # In[6]:
 
 
-def plot_matrix( npmatrix, timeaxis, picture_filename ):
+def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
     
     logging.info('Plot the data')
     
@@ -301,13 +303,15 @@ def plot_matrix( npmatrix, timeaxis, picture_filename ):
 
     fig, ax0 = plt.subplots(1, 1)
     
+    fontsize_default = 9
+    
     # Add text
     """Add figure creating timestamp"""
     """https://riptutorial.com/matplotlib/example/16030/coordinate-systems-and-text"""
     plt.text(  # position text relative to Figure
         0.0, 0.02, 
         'Figure generated: ' + str(datetime.now().strftime("%Y-%m-%d %H:%M")) + 
-        '\nFilename:       ' + picture_filename, fontsize=5,
+        '\nFilename:       ' + picture_filename, fontsize=fontsize_default-3,
         ha='left', va='baseline',
         transform=fig.transFigure
     )
@@ -337,8 +341,8 @@ def plot_matrix( npmatrix, timeaxis, picture_filename ):
     ax0.set_xticklabels( xticklabels )
 
     # adapt fontsize at labels
-    plt.xticks(rotation=55, fontsize=9)
-    plt.yticks(fontsize=9)
+    plt.xticks(rotation=55, fontsize=fontsize_default)
+    plt.yticks(fontsize=fontsize_default)
     #plt.set_cmap('gray')
 
 
@@ -346,7 +350,9 @@ def plot_matrix( npmatrix, timeaxis, picture_filename ):
     plt.gca().set_aspect('equal', adjustable='box')
 
     # set title and labels
-    ax0.set_title(label='Data availability', weight='bold')
+    title1 = org_header[1].title() # makes string camel case
+    #ax0.set_title(label='Data availability', weight='bold')
+    #ax0.set_title(label=title1, weight='bold')
     ax0.set_ylabel('Weekday')
     ax0.set_xlabel('Time [date of first weekday]')
 
@@ -356,8 +362,9 @@ def plot_matrix( npmatrix, timeaxis, picture_filename ):
     #cbar = fig.colorbar(c, ticks=[0, 1], ax=ax0, orientation="horizontal", pad=0.3)
     cbar = fig.colorbar(c, ticks=[np.nanmin(npmatrix), np.nanmax(npmatrix)], ax=ax0, shrink=0.4)
 
-    cbar.ax.set_yticklabels(['available', 'missing'])  # vertically oriented colorbar
-    #cbar.set_label(label='Temperature ($^{\circ}$C)', size='large', weight='bold')
+    cbar.ax.set_yticklabels(['less', 'more'], fontsize=fontsize_default-1)  # vertically oriented colorbar
+    #cbar.set_label(label='Temperature', fontsize=8, weight='bold')
+    cbar.set_label(label=title1, labelpad=-20, y=0.5, rotation=90, fontsize=fontsize_default, weight='bold')
 
     # save figure
     plt.savefig(facecolor="none",dpi=200,fname=picture_filename)
@@ -374,17 +381,19 @@ def main( myDict ):
     
     # get data from a source
     if ( myDict['data_import'] == 'DataFrame' ):
-        df = rename_external_df_columns( myDict['DataFrame'] )
+        df, org_header = rename_external_df_columns( myDict['DataFrame'] )
         
     elif ( myDict['data_import'] == 'CSV' ):
-        df = read_csv_file( myDict['csv_filename'] )
+        df, org_header = read_csv_file( myDict['csv_filename'] )
 
     elif ( myDict['data_import'] == 'Test' ):
-        df = generate_test_data()
+        df, org_header = generate_test_data()
+        df, org_header = rename_external_df_columns( df )
     else:
         logging.warning('data_imoprt value is wrong: ' + myDict['data_import'] ) 
         exit()
-        
+    
+    # check if DataFrame
     if not isinstance(df, pd.DataFrame):
         logging.warning('Provided or generated variable is not a DataFrame ') 
         exit()
@@ -397,7 +406,7 @@ def main( myDict ):
     
     npmatrix, timeaxis = create_matrix_from_grouped_filled_dataframe( df_filled )
     
-    plot_matrix( npmatrix, timeaxis, myDict['picture_filename'] )
+    plot_matrix( npmatrix, timeaxis, org_header, myDict['picture_filename'] )
 
 
 if __name__ == '__main__':
