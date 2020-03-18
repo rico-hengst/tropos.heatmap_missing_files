@@ -24,6 +24,7 @@ The data can be provided
     * the data row1 should be consists of a date or a datetime
     * the data row2 should be a float or a integer value
     * e.g.:
+    * 
 ```
 date,missing files
 2020-01-18 00:00:00, 1
@@ -36,6 +37,7 @@ date,missing files
 2020-01-25 10:00:00, 1
 2020-01-30 10:00:00, 0.5
 ```
+
 * as DataFrame
     * the values in the column 'data' should be a dtype: datetime64[ns]
     * the values in the second column shouls be float or integer
