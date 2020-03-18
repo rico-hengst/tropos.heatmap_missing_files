@@ -24,7 +24,7 @@ The data can be provided
     * the data row1 should be consists of a date or a datetime
     * the data row2 should be a float or a integer value
     * e.g.:
-    * 
+
 ```
 date,missing files
 2020-01-18 00:00:00, 1
