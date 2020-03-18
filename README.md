@@ -5,6 +5,7 @@ The repo contains a python3 module to visualize subjects (e.g. missing files) - 
 
 ## Description and objective
 The repo contains a python3 module to visualize data in a heatmap with daily resolution.
+![PlotHeatmap](doc/PlotHeatmap.png)
 
 The software package is written to visualize data similar to the 
 [github contribution chart](https://help.github.com/en/github/setting-up-and-managing-your-github-profile/viewing-contributions-on-your-profile).
@@ -33,14 +34,14 @@ date,missing files
 2020-01-30 10:00:00, 0.5
 ```
 
-* as DataFrame
+* as panda DataFrame
     * the values in the column 'data' should be a dtype: datetime64[ns]
     * the values in the second column shouls be float or integer
 
 
 In general 
 * the data can contain gaps and 
-* the data can be provided unsorted.
+* the data can be provided un-sorted.
 
 ## Requirements
 
