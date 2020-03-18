@@ -14,11 +14,6 @@ The software package is written to visualize data similar to the
 This package is **not prepared for collecting** the data.
 This package is **prepared for visualization** only.
 
-## Requirements
-
-* Python version 3.x
-
-## Usage
 The data can be provided 
 * as two column comma separated csv-file, with a single line header with the names of the columns
     * the data row1 should be consists of a date or a datetime
@@ -46,3 +41,15 @@ date,missing files
 In general 
 * the data can contain gaps and 
 * the data can be provided unsorted.
+
+## Requirements
+
+* Python version 3.x
+
+## Usage
+```
+python PlotHeatmap
+```
+
+## Author
+* Rico Hengst ![Logo](doc/ORCIDiD_icon16x16.png) [https://orcid.org/0000-0001-8994-5868](https://orcid.org/0000-0001-8994-5868)
