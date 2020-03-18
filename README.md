@@ -4,9 +4,8 @@
 The repo contains a python3 module to visualize subjects (e.g. missing files) - hereafter refered as data - in a heatmap with daily resolution.
 
 ## Description and objective
-The repo contains a python3 module to visualize data in a heatmap with daily resolution.
 ![PlotHeatmap](doc/PlotHeatmap.png)
-
+The repo contains a python3 module to visualize data in a heatmap with daily resolution.
 The software package is written to visualize data similar to the 
 [github contribution chart](https://help.github.com/en/github/setting-up-and-managing-your-github-profile/viewing-contributions-on-your-profile).
 
