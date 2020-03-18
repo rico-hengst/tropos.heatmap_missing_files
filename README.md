@@ -52,4 +52,4 @@ python PlotHeatmap
 ```
 
 ## Author
-* Rico Hengst ![Logo](doc/ORCIDiD_icon16x16.png) [https://orcid.org/0000-0001-8994-5868](https://orcid.org/0000-0001-8994-5868)
+* Rico Hengst ![Logo](doc/ORCIDiD_icon32x32.png) [https://orcid.org/0000-0001-8994-5868](https://orcid.org/0000-0001-8994-5868)
