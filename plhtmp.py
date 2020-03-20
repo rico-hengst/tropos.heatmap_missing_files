@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+"""
+This is only a script to test the module: PlotHeatmap
+
+"""
+
 
 import numpy as np
 import pandas as pd
