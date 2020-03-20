@@ -48,13 +48,16 @@ In general
 * Python version 3.x
 
 ## Usage
+
+There are two options to take your data.
+
 ... see also python script ```plthtmp.py```
 
 ```
 import PlotHeatmap
 
 
-# used data are imported from csv file
+# OPTION1: used data are imported from csv file
 PlotHeatmap.main(
     { 
     'data_import'      : 'CSV', # Test|DataFrame|CSV
@@ -63,7 +66,7 @@ PlotHeatmap.main(
     }
 )
 
-# used data are provided as panda DataFrame
+# OPTION2: used data are provided as panda DataFrame
 PlotHeatmap.main(
     { 
     'data_import'      : 'DataFrame', # Test|DataFrame|CSV
