@@ -301,7 +301,13 @@ def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
     # plot in jupyter notbook
     #get_ipython().run_line_magic('matplotlib', 'notebook')
 
-    fig, ax0 = plt.subplots(1, 1)
+    #fig, ax0 = plt.subplots(1, 1)
+    
+    
+    # start with a rectangular Figure
+    fig = plt.figure(figsize=(12, 6))
+    ax0 = plt.axes([0.07, 0.3, 0.99, 0.55])
+    
     
     fontsize_default = 9
     
@@ -315,6 +321,7 @@ def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
         ha='left', va='baseline',
         transform=fig.transFigure
     )
+    
     
 
     
