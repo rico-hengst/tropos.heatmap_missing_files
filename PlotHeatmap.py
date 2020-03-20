@@ -338,17 +338,41 @@ def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
 
     # stepsize of dates on xaxis in unit WEEK
     stepsize=4
+    
+    # set xticks and labels 
+    # in a eqidistant way
+    # xlabeltxt = 'Time [date of first weekday'
+    #xticks = np.arange(0+0.5, len(timeaxis)+0.5, stepsize).tolist()
+    #xticklabels = [date_obj.strftime('%Y-%m-%d') for date_obj in timeaxis[0:len(timeaxis):stepsize]]
+    
+    
+    # set xticks and labels 
+    # based on 15.th of month
+    xlabeltxt = 'Time [week]'
+    xticks = []
+    xticklabels = []
+    for kk in range( len(timeaxis) ):
+        for nn in range(7):
+            currentdate = timeaxis[kk] + timedelta(days=nn)
 
-    # set xticks and labels
-    xticks = np.arange(0+0.5, len(timeaxis)+0.5, stepsize).tolist()
-    xticklabels = [date_obj.strftime('%Y-%m-%d') for date_obj in timeaxis[0:len(timeaxis):stepsize]]
+            if ( currentdate.day == 15 ):
+                xticks.append( 0.5 + kk )
+                if ( len(xticklabels) == 0 ): # print also year if first tick
+                    xticklabels.append( currentdate.strftime('%b') + '\n' + str(currentdate.year) )
+            
+                elif ( currentdate.month == 1 ): # print year always on January
+                    xticklabels.append( currentdate.strftime('%b') + '\n' + str(currentdate.year) )
+              
+                else:
+                    xticklabels.append( currentdate.strftime('%b') )
+
 
     # set it
     ax0.set_xticks( xticks )
     ax0.set_xticklabels( xticklabels )
 
     # adapt fontsize at labels
-    plt.xticks(rotation=55, fontsize=fontsize_default)
+    plt.xticks(rotation=0, fontsize=fontsize_default)
     plt.yticks(fontsize=fontsize_default)
     #plt.set_cmap('gray')
 
@@ -361,7 +385,7 @@ def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
     #ax0.set_title(label='Data availability', weight='bold')
     #ax0.set_title(label=title1, weight='bold')
     ax0.set_ylabel('Weekday')
-    ax0.set_xlabel('Time [date of first weekday]')
+    ax0.set_xlabel(xlabeltxt)
 
     # orientation colorbar
     # https://stackoverflow.com/questions/13310594/positioning-the-colorbar
