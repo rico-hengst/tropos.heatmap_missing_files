@@ -311,13 +311,21 @@ def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
     
     fontsize_default = 9
     
+    
+    
+    
     # Add text
     """Add figure creating timestamp"""
     """https://riptutorial.com/matplotlib/example/16030/coordinate-systems-and-text"""
+    # some statistics
+    val_gt0 = np.count_nonzero( npmatrix[~np.isnan(npmatrix)] > 0 )
+    val_eq0 = np.count_nonzero( npmatrix[~np.isnan(npmatrix)] == 0 )
     plt.text(  # position text relative to Figure
         0.0, 0.02, 
-        'Figure generated: ' + str(datetime.now().strftime("%Y-%m-%d %H:%M")) + 
-        '\nFilename:       ' + picture_filename, fontsize=fontsize_default-3,
+        '\n%-30s : %s' % ('Figure generated', str(datetime.now().strftime("%Y-%m-%d %H:%M")) ) +
+        '\n%-30s : %s' % ('Filename', picture_filename) +
+        '\n%-30s : %s' % ('Number of ' + org_header[1].title() + ' == 0', str( val_gt0 ) ), 
+        fontsize=fontsize_default-3,
         ha='left', va='baseline',
         transform=fig.transFigure
     )
@@ -398,7 +406,8 @@ def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
     cbar.set_label(label=title1, labelpad=-20, y=0.5, rotation=90, fontsize=fontsize_default, weight='bold')
 
     # save figure
-    plt.savefig(facecolor="none",dpi=200,fname=picture_filename)
+    #plt.savefig(facecolor="none",dpi=200,fname=picture_filename)
+    plt.savefig(dpi=200,fname=picture_filename)
     
     # close figure
     plt.close(fig)
