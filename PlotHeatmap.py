@@ -399,6 +399,9 @@ def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
 
     # save figure
     plt.savefig(facecolor="none",dpi=200,fname=picture_filename)
+    
+    # close figure
+    plt.close(fig)
 
 
 
