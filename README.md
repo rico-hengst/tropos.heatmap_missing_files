@@ -9,7 +9,9 @@ The repo contains a python3 module to visualize data in a heatmap with daily res
 The software package is written to visualize data similar to the 
 [github contribution chart](https://help.github.com/en/github/setting-up-and-managing-your-github-profile/viewing-contributions-on-your-profile).
 ![PlotHeatmap](doc/PlotHeatmap.png)
-
+*Example 1: The provided data has muliple entries per day and a day can have no, a few or exclusiv missing files.*
+![PlotHeatmap](doc/PlotHeatmap2.png)
+*Example 2: The providid data has one entry (row) per day.*
 
 ## Assumptions and notes
 This package is **not prepared for collecting** the data.
@@ -17,8 +19,8 @@ This package is **prepared for visualization** only.
 
 The data can be provided in two different ways:
 * as two column comma separated csv-file, with a single line header with the names of the columns
-    * the data row1 should be consists of a date or a datetime string
-    * the data row2 should be a float or a integer value
+    * the data column1 should be consists of a date or a datetime string
+    * the data column2 should be a float or a integer value
     * e.g.:
 
 ```
@@ -35,8 +37,9 @@ date,missing files
 ```
 
 * as pandas DataFrame
-    * the values in the column 'data' should be a dtype: datetime64[ns]
+    * the values in the column1 'date' should be a dtype: datetime64[ns]
     * the values in the second column shouls be float or integer
+        * reccomendation: use value *0* if file is NOT missing and value *1* if file is missing
 
 
 In general 
