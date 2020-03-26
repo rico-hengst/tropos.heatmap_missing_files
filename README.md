@@ -18,7 +18,7 @@ This package is **not prepared for collecting** the data.
 This package is **prepared for visualization** only.
 
 The data can be provided in two different ways:
-* **data_input_type = CSV ** as two column comma separated csv-file, with a single line header with the names of the columns
+* **data_input_type = CSV** as two column comma separated csv-file, with a single line header with the names of the columns
     * the data column1 should be consists of a date or a datetime string
     * the data column2 should be a float or a integer value
     * e.g.:
