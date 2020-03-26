@@ -416,17 +416,17 @@ def main( myDict ):
     logging.info('Start script')
     
     # get data from a source
-    if ( myDict['data_import'] == 'DataFrame' ):
+    if ( myDict['data_import_type'] == 'DataFrame' ):
         df, org_header = rename_external_df_columns( myDict['DataFrame'] )
         
-    elif ( myDict['data_import'] == 'CSV' ):
+    elif ( myDict['data_import_type'] == 'CSV' ):
         df, org_header = read_csv_file( myDict['csv_filename'] )
 
-    elif ( myDict['data_import'] == 'Test' ):
+    elif ( myDict['data_import_type'] == 'Test' ):
         df, org_header = generate_test_data()
         df, org_header = rename_external_df_columns( df )
     else:
-        logging.warning('data_imoprt value is wrong: ' + myDict['data_import'] ) 
+        logging.warning('data_imoprt value is wrong: ' + myDict['data_import_type'] ) 
         exit()
     
     # check if DataFrame
@@ -447,7 +447,7 @@ def main( myDict ):
 
 if __name__ == '__main__':
     main( { 
-        'data_import' : 'Test', # Test|DataFrame|CSV
+        'data_import_type' : 'Test', # Test|DataFrame|CSV
         'picture_filename' : 'df.png',
         'csv_filename' : 'd2.csv'
     } )
