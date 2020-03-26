@@ -42,11 +42,18 @@ date,missing files
 In general 
 * the provided data can contain gaps and 
 * the provided data can be un-sorted in terms of date or datetime.
-* the title at the colorbar displays the column(2of2) name of your DataFrame or your csvFile
+* the title (e.g.: Missing files) at the colorbar displays the column(2of2) name of your DataFrame or your csvFile
 
 ## Requirements
 
 * Python version 3.x
+* numpy
+* pandas
+* datetime
+* platform
+* os
+* matplotlib
+
 
 ## Usage
 
