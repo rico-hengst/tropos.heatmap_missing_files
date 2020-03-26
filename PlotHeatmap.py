@@ -43,12 +43,12 @@ def generate_test_data():
     
     
     # create panda date range: dtype: datetime64[ns]
-    date_rng = pd.date_range(start='4/4/2019', end='8/28/2019', freq='12H')
+    date_rng = pd.date_range(start='4/4/2019', end='8/28/2019', freq='24H')
 
     # create DataFrame
     df = pd.DataFrame(date_rng, columns=['date']) # dtype: datetime64[ns]
 
-    df['missing_files_intern'] = np.random.randint(0,3,size=(len(date_rng)))
+    df['missing_files_intern'] = np.random.randint(0,2,size=(len(date_rng)))
     
 
     # add a data element
