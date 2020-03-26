@@ -18,7 +18,7 @@ This package is **not prepared for collecting** the data.
 This package is **prepared for visualization** only.
 
 The data can be provided in two different ways:
-* as two column comma separated csv-file, with a single line header with the names of the columns
+* **data_input_type = CSV** as two column comma separated csv-file, with a single line header with the names of the columns
     * the data column1 should be consists of a date or a datetime string
     * the data column2 should be a float or a integer value
     * e.g.:
@@ -36,7 +36,7 @@ date,missing files
 2020-01-30 10:00:00, 0.5
 ```
 
-* as pandas DataFrame
+* **data_input_type = DataFrame** as pandas DataFrame
     * the values in the column1 'date' should be a dtype: datetime64[ns]
     * the values in the second column shouls be float or integer
         * reccomendation: use value *0* if file is NOT missing and value *1* if file is missing
@@ -71,7 +71,7 @@ import PlotHeatmap
 # OPTION1: used data are imported from csv file
 PlotHeatmap.main(
     { 
-    'data_import'      : 'CSV', # Test|DataFrame|CSV
+    'data_import_type' : 'CSV', # Test|DataFrame|CSV
     'picture_filename' : 'test/mypic_testfile_csv',
     'csv_filename'     : 'test/test_missing_files.csv'
     }
@@ -80,7 +80,7 @@ PlotHeatmap.main(
 # OPTION2: used data are provided as panda DataFrame
 PlotHeatmap.main(
     { 
-    'data_import'      : 'DataFrame', # Test|DataFrame|CSV
+    'data_import_type' : 'DataFrame', # Test|DataFrame|CSV
     'picture_filename' : 'test/mypic_external_dataframe',
     'DataFrame'        : df
     }
