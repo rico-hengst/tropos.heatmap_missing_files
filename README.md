@@ -15,9 +15,9 @@ The software package is written to visualize data similar to the
 This package is **not prepared for collecting** the data.
 This package is **prepared for visualization** only.
 
-The data can be provided 
+The data can be provided in two different ways:
 * as two column comma separated csv-file, with a single line header with the names of the columns
-    * the data row1 should be consists of a date or a datetime
+    * the data row1 should be consists of a date or a datetime string
     * the data row2 should be a float or a integer value
     * e.g.:
 
@@ -34,14 +34,14 @@ date,missing files
 2020-01-30 10:00:00, 0.5
 ```
 
-* as panda DataFrame
+* as pandas DataFrame
     * the values in the column 'data' should be a dtype: datetime64[ns]
     * the values in the second column shouls be float or integer
 
 
 In general 
-* the data can contain gaps and 
-* the data can be provided un-sorted.
+* the provided data can contain gaps and 
+* the provided data can be un-sorted in terms of date or datetime.
 
 ## Requirements
 
