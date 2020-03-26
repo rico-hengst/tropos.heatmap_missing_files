@@ -11,7 +11,7 @@ The software package is written to visualize data similar to the
 ![PlotHeatmap](doc/PlotHeatmap.png)
 
 
-## Assumption
+## Assumptions and notes
 This package is **not prepared for collecting** the data.
 This package is **prepared for visualization** only.
 
@@ -42,6 +42,7 @@ date,missing files
 In general 
 * the provided data can contain gaps and 
 * the provided data can be un-sorted in terms of date or datetime.
+* the title at the colorbar displays the column(2of2) name of your DataFrame or your csvFile
 
 ## Requirements
 
