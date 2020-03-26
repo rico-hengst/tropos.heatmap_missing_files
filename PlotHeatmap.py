@@ -1,19 +1,12 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# # Read csv data
+# # Read data
+# # Plot Heatmap
 
-# In[1]:
+# # Author: Rico Hengst @tropos.de
 
 
-"""
-This is the "example" module.
-
-The example module supplies one function, factorial().  For example,
-
-"""
-
-import getopt
 import sys
 
 
