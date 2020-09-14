@@ -271,8 +271,9 @@ def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
 
     # LinearSegmentedColormap
     # https://stackoverflow.com/questions/52626103/custom-colormap
-    mycolors = [[norm(-1.0), "lightgrey"],
-              [norm( 0.4), "yellow"],
+    mycolors = [[norm(-1.0), "limegreen"],
+              [norm( -0.95), "yellow"],
+               [norm(0.8), "hotpink"],
               [norm( 1.0), "red"]]
 
     cmap11 = matplotlib.colors.LinearSegmentedColormap.from_list("", mycolors)
@@ -298,8 +299,8 @@ def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
     
     
     # start with a rectangular Figure
-    fig = plt.figure(figsize=(12, 6))
-    ax0 = plt.axes([0.07, 0.3, 0.99, 0.55])
+    fig = plt.figure(figsize=(12, 4.5))
+    ax0 = plt.axes([0.07, 0.2, 0.99, 0.8])
     
     
     fontsize_default = 9
@@ -313,23 +314,25 @@ def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
     # some statistics
     val_gt0 = np.count_nonzero( npmatrix[~np.isnan(npmatrix)] > 0 )
     val_eq0 = np.count_nonzero( npmatrix[~np.isnan(npmatrix)] == 0 )
-    plt.text(  # position text relative to Figure
-        0.0, 0.02, 
-        '\n%-30s : %s' % ('Figure generated', str(datetime.now().strftime("%Y-%m-%d %H:%M")) ) +
-        '\n%-30s : %s' % ('Filename', picture_filename) +
-        '\n%-30s : %s' % ('Number of ' + org_header[1].title() + ' == 0', str( val_gt0 ) ), 
-        fontsize=fontsize_default-3,
-        ha='left', va='baseline',
-        transform=fig.transFigure
-    )
+
     
+    my_txt_legend_1 = ["Figure generated", "Name of file", "Number of days without missing data", "Number of days, where data are missed"]
+    my_txt_legend_2 = [str(datetime.now().strftime("%Y-%m-%d %H:%M")), picture_filename, str( val_eq0 ), str( val_gt0 ) ]
+    
+    for index, item in enumerate(my_txt_legend_1):
+        yy = 0.1 - (index+1)/50
+        plt.text(0.01, yy, my_txt_legend_1[index], fontsize=fontsize_default-3, ha='left', va='baseline', transform=fig.transFigure)
+        plt.text(0.2, yy, my_txt_legend_2[index], fontsize=fontsize_default-3, ha='left', va='baseline', transform=fig.transFigure)
     
 
     
 
     # plot npmatrix data
     c = ax0.pcolor(npmatrix,cmap=cmap11, edgecolors='w', linewidths=2)
-
+    
+    # set limits of colorbar
+    c.set_clim(vmin=0, vmax=1)
+    
     # set yticks
     ax0.set_yticks([1.5, 3.5, 5.5])
     ax0.set_yticklabels(['Tue', 'Thu', 'Sat'])
@@ -392,7 +395,9 @@ def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
     # https://stackoverflow.com/questions/13310594/positioning-the-colorbar
 
     #cbar = fig.colorbar(c, ticks=[0, 1], ax=ax0, orientation="horizontal", pad=0.3)
-    cbar = fig.colorbar(c, ticks=[np.nanmin(npmatrix), np.nanmax(npmatrix)], ax=ax0, shrink=0.4)
+    #cbar = fig.colorbar(c, ticks=[np.nanmin(npmatrix), np.nanmax(npmatrix)], ax=ax0, shrink=0.4)
+    cbar = fig.colorbar(c, ticks=[0, 1], ax=ax0, shrink=0.4)
+
 
     cbar.ax.set_yticklabels(['less', 'more'], fontsize=fontsize_default-1)  # vertically oriented colorbar
     #cbar.set_label(label='Temperature', fontsize=8, weight='bold')
