@@ -21,7 +21,7 @@ import matplotlib as mpl
 import matplotlib.colors
 
 import logging
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.INFO)
 
 """Check python version"""
 python_version = platform.python_version().split(".")
@@ -43,7 +43,7 @@ def generate_test_data():
     
     
     # create panda date range: dtype: datetime64[ns]
-    date_rng = pd.date_range(start='4/4/2019', end='8/28/2019', freq='24H')
+    date_rng = pd.date_range(start='4/1/2019', end='9/5/2019', freq='24H')
 
     # create DataFrame
     df = pd.DataFrame(date_rng, columns=['date']) # dtype: datetime64[ns]
@@ -52,7 +52,7 @@ def generate_test_data():
     
 
     # add a data element
-    ts = pd.to_datetime("2019-09-09 18:47:05.487", format="%Y-%m-%d %H:%M:%S.%f")
+    ts = pd.to_datetime("2019-09-08 18:47:05.487", format="%Y-%m-%d %H:%M:%S.%f")
     df =df.append({'date' : ts , 'missing_files_intern' : 1},ignore_index=True)
 
     # get header name
@@ -207,46 +207,81 @@ def create_matrix_from_grouped_filled_dataframe( df_filled ):
         Input: df_filled
     '''
     
-    logging.info('The filled DataFrame will be transformed to a matrix(height=7days, width=number of week in DataFrame')
+    df_filled_extented = df_filled.copy()
+    
+    # number of days to fullfill (prepend) to dataframe to start on MONDAY
+    prepend_number = int(df_filled['dayofweek'][0]);
+    
 
-    # transform DataFrame gf to an matrix 
+    # number of days to fullfill (append) to dataframe to end on SUNDAY
+    append_number = 6 - int( df_filled['dayofweek'][  len(df_filled.index) - 1 ] );
+    
 
-    # generate a nan numpy matrix
-    delta = df_filled['date'][len(df_filled.index)-1] - df_filled['date'][0]
+    # prepend rows to start on prevoius MONDAY
+    for i in range(0, prepend_number):
+        # get date in loop
+        d = df_filled['date'][0] - timedelta(days=i+1)
+        
+        new_row = {'date':d, 'commit':np.nan, 'dayofweek':d.weekday(), 'info':'prepend'} # use weeekday instead dayofweek, cause its a panda timestamp
+        df_filled_extented = df_filled_extented.append(new_row, ignore_index=True)
+        
+    # append rows to end on next SUNDAY
+    for i in range(0, append_number):
+        # get date in loop
+        d = df_filled['date'][ len(df_filled.index) - 1 ] + timedelta(days=i+1)
+        
+        new_row = {'date':d, 'commit':np.nan, 'dayofweek':d.weekday(), 'info':'append'} # use weeekday instead dayofweek, cause its a panda timestamp
+        df_filled_extented = df_filled_extented.append(new_row, ignore_index=True)
+
+    
+    # Sort by data
+    df_filled_extented.sort_values('date',ascending = True, inplace=True)
+    
+    # Drop former default index, automatic add new default index
+    df_filled_extented.reset_index(drop=True,inplace=True)
+
+    
+    # delta timestamp duration
+    delta = df_filled_extented['date'][len(df_filled_extented.index)-1] - df_filled_extented['date'][0]
 
     height = 7
-    width = int(delta.days/7 + 2)
+    width = int(delta.days/height+1)
+    
+    # transform DataFrame gf to an matrix 
+    logging.info('The filled DataFrame will be transformed to a matrix (height=days, width=number of week in DataFrame) ' + str(height) + ' x ' + str(width) )
+    
+    # generate a nan numpy matrix
     npmatrix = np.full([height, width], np.nan)
 
     # add vector for label xaxis
     timeaxis = []
 
     # set first timeaxis element to monday
-    timeaxis.append( df_filled['date'][0] - timedelta( days = df_filled['dayofweek'][0]  )  )
+    timeaxis.append( df_filled_extented['date'][0] - timedelta( days = df_filled_extented['dayofweek'][0]  )  )
+    
 
     # loop to create array a from dataframe gf
     ii = None
     for iweek in range( width ):
 
         # add eleement to timeaxis each week add a "monday" 
-        if ( ii != None and ii < len(df_filled.date)-1 ):
+        if ( ii != None and ii < len(df_filled_extented.date)-1 ):
             # last valid ii -> = Sunday, so add + 1
-            timeaxis.append(df_filled.date[ii+1])
-            #print(timeaxis[-1].strftime( "%A     --- %c"))
+            timeaxis.append(df_filled_extented.date[ii+1])
 
         # weekday iterating
         for iweekday in range( height ):
 
             # start ii index
             if ( ii == None ):
-                if ( iweekday == df_filled['dayofweek'][0] ):
+                if ( iweekday == df_filled_extented['dayofweek'][0] ):
                     ii = -1
 
             # add gf value to array    
-            if ( ii != None and ii < len(df_filled.index)-1 ):
+            if ( ii != None and ii < len(df_filled_extented.index)-1 ):
                 ii = ii + 1
-                npmatrix[iweekday,iweek] = df_filled['commit'][ii]
-                
+                npmatrix[iweekday,iweek] = df_filled_extented['commit'][ii]
+                   
     return npmatrix, timeaxis
 
 
