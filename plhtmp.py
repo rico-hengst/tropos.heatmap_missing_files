@@ -35,7 +35,7 @@ PlotHeatmap.main(
 
 
 # create panda date range: dtype: datetime64[ns]
-date_rng = pd.date_range(start='3/19/2019', end='8/28/2019', freq='12H')
+date_rng = pd.date_range(start='3/19/2019', end='8/26/2019', freq='12H')
 
 # create DataFrame
 df = pd.DataFrame(date_rng, columns=['date']) # dtype: datetime64[ns]
@@ -44,7 +44,7 @@ df['missing files'] = np.random.randint(0,3,size=(len(date_rng)))
 
 
 # add a data element
-ts = pd.to_datetime("2019-03-07 18:47:05.487", format="%Y-%m-%d %H:%M:%S.%f")
+ts = pd.to_datetime("2019-03-10 18:47:05.487", format="%Y-%m-%d %H:%M:%S.%f")
 df =df.append({'date' : ts , 'missing files' : 2},ignore_index=True)
 
 # sort data
