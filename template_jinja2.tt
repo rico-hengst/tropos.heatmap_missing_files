@@ -12,361 +12,359 @@ https://jsfiddle.net/BlackLabel/z0ej46sr/
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Heatmap of missing files</title>
        
-<style>
-/*
-.highcharts-figure, .highcharts-data-table table {
-    min-width: 360px; 
-    max-width: 1000px;
-    margin: 1em auto;
-}
+    <style>
+        /*
+        .highcharts-figure, .highcharts-data-table table {
+            min-width: 360px; 
+            max-width: 1000px;
+            margin: 1em auto;
+        }
 
-.highcharts-data-table table {
-    font-family: Verdana, sans-serif;
-    border-collapse: collapse;
-    border: 1px solid #EBEBEB;
-    margin: 10px auto;
-    text-align: center;
-    width: 100%;
-    max-width: 500px;
-}
-.highcharts-data-table caption {
-    padding: 1em 0;
-    font-size: 1.2em;
-    color: #555;
-}
-.highcharts-data-table th {
-    font-weight: 600;
-    padding: 0.5em;
-}
-.highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
-    padding: 0.5em;
-}
-.highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
-    background: #f8f8f8;
-}
-.highcharts-data-table tr:hover {
-    background: #f1f7ff;
-}
-*/
+        .highcharts-data-table table {
+            font-family: Verdana, sans-serif;
+            border-collapse: collapse;
+            border: 1px solid #EBEBEB;
+            margin: 10px auto;
+            text-align: center;
+            width: 100%;
+            max-width: 500px;
+        }
+        .highcharts-data-table caption {
+            padding: 1em 0;
+            font-size: 1.2em;
+            color: #555;
+        }
+        .highcharts-data-table th {
+            font-weight: 600;
+            padding: 0.5em;
+        }
+        .highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
+            padding: 0.5em;
+        }
+        .highcharts-data-table thead tr, .highcharts-data-table tr:nth-child(even) {
+            background: #f8f8f8;
+        }
+        .highcharts-data-table tr:hover {
+            background: #f1f7ff;
+        }
+        */
 
-/* https://codepen.io/paulobrien/pen/jAzkpY */
+        /* https://codepen.io/paulobrien/pen/jAzkpY */
 
-html, body {
-    margin:0;
-    padding:0;
-    height:100%
-}
-.wrap {
-    position:relative;
-    min-height:100%;
-    background:none;
-}
-.abs {
-/*    width:100px;*/
-    height:80%;
-    background:none;
-    position:absolute;
-    left:0;
-    right:0;
-    top:0;
-    bottom:0;
-    margin:auto;
-}
-
+        html, body {
+            margin:0;
+            padding:0;
+            height:100%
+        }
+        .wrap {
+            position:relative;
+            min-height:100%;
+            background:none;
+        }
+        .abs {
+            height:80%;
+            background:none;
+            position:absolute;
+            left:0;
+            right:0;
+            top:0;
+            bottom:0;
+            margin:auto;
+        }
 
 
-body { 
-    font-family: "Gill Sans Extrabold", 
-    Helvetica, sans-serif
-}
+        body { 
+            font-family: "Gill Sans Extrabold", 
+            Helvetica, sans-serif
+        }
 
 
-table {border-collapse: collapse;}
-table tr td {color: grey;}
-td {
-    padding: 0px;
-    font-size: 80%
-}
+        table {border-collapse: collapse;}
+        table tr td {color: grey;}
+        td {
+            padding: 0px;
+            font-size: 80%
+        }
 
 
-.center {
-    margin-left: auto;
-    margin-right: auto;
-}
+        .center {
+            margin-left: auto;
+            margin-right: auto;
+        }
 
 
-.button {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 10px 22px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 80%;
-    margin: 4px 2px;
-    cursor: pointer;
-}
-.button5 {
-    background-color: white;
-    color: rgb(180,180,180);
-    border: 2px solid rgb(180,180,180);
-}
-</style>
+        .button {
+            background-color: #4CAF50; /* Green */
+            border: none;
+            color: white;
+            padding: 10px 22px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 80%;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+        .button5 {
+            background-color: white;
+            color: rgb(180,180,180);
+            border: 2px solid rgb(180,180,180);
+        }
+    </style>
 
 
        
 </head>
 
 <body>
-       
-       
-<script src="https://code.highcharts.com/highcharts.js"></script>
-<script src="https://code.highcharts.com/modules/heatmap.js"></script>
-<script src="https://code.highcharts.com/modules/data.js"></script>
-<script src="https://code.highcharts.com/modules/exporting.js"></script>
-
-
-<!--
-place the heatmap
--->
-<div class="wrap">
-    <div class="abs">
-    <figure class="highcharts-figure" style="max-width:1000px; margin-left: auto; margin-right: auto;">
-    
-        <div style="text-align:center; margin-bottom:10ex">
-            <button onclick="toggleFunction()" class="button button5 center">Statistic view/hide</button>
-        </div>
-        <div id="myDIV" style="display:none">
-  
-
-            <table class="center">
-                <tr>
-                    <td>created</td>
-                    <td  style="text-align:right">{{myDict.datetime_now }}</td>
-                </tr>
-                <tr>
-                    <td>selected time interval</td>
-                    <td  style="text-align:right">{{myDict.datetime_first_selected}} - {{myDict.datetime_last_selected}}</td>
-                </tr>
-                <tr>
-                    <td>extented time interval</td>
-                    <td  style="text-align:right">{{myDict.datetime_first_extented}} - {{myDict.datetime_last_extented}}</td>
-                </tr>
-                <tr>
-                    <td>number of days on those files are missing</td>
-                    <td  style="text-align:right">{{myDict.elements_gt0}} / {{myDict.total_number_elements}}</td>
-                </tr>
-                <tr>
-                    <td>number of days on those no files are missing</td>
-                    <td  style="text-align:right">{{myDict.elements_eq0}} / {{myDict.total_number_elements}}</td>
-                </tr>
-               
-            </table>
-        
-        </div> 
-        
-        <div id="container"></div>
-    </figure>
-    </div>
-</div>
            
-<!--
-place data
--->
-<pre id="csv" style="display: none">Date,Day of the week,Missing files
-{% for i, row in df.iterrows(): -%}
-    {{ row['date'].strftime('%Y%W')  }},{{row['dayofweek'] | int}},{{row['commit']}}
-{% endfor %}
-</pre>
-
-
-<!--
-create/prepare highcharts heatmap
--->
-<script>
-    var weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    <!--
+    place the heatmap and statistic
+    -->
+    <div class="wrap">
+        <div class="abs">
+        <figure class="highcharts-figure" style="max-width:1000px; margin-left: auto; margin-right: auto;">
         
-    {% set labeldates=df['date'][::7] %}
-    
-    // set labeldates ARRAY
-    var labels123=[
-    {% for labeldate in labeldates: -%}
-        {# //new Date("{{labeldate}}") -#}
-        {# Datetime reuires new compution, cause javascript starts at month 0 -#}
-        {% set Y = labeldate.strftime('%Y') -%}
-        {% set m = labeldate.strftime('%m') -%}
-        {% set d = labeldate.strftime('%d') -%}
-        new Date({{Y|int}}, {{m|int}}-1, {{d|int}})
-        {% if loop.last -%}
-        {% else -%}  
-        ,
-        {% endif -%}
-    {% endfor -%}
-    ]
-    
-    // create heatmap
-    Highcharts.chart('container', {
-    
-        data: {
-            csv: document.getElementById('csv').innerHTML
-        },
-    
-        chart: {
-            type: 'heatmap',
-            width: 1000,
-            height: 400,
-            plotBorderWidth: 1,
-            backgroundColor: 'rgba(255,2,255,0.01)',
-    
-            //events: {
-                
-            //// custom text box
-                //render() {
-                    //var chart = this
+            <div style="text-align:center; margin-bottom:10ex">
+                <button onclick="toggleFunction()" class="button button5 center">Statistic view/hide</button>
+            </div>
+            <div id="myDIV" style="display:none">
+      
+
+                <table class="center">
+                    <tr>
+                        <td>created</td>
+                        <td  style="text-align:right">{{myDict.datetime_now }}</td>
+                    </tr>
+                    <tr>
+                        <td>selected time interval</td>
+                        <td  style="text-align:right">{{myDict.datetime_first_selected}} - {{myDict.datetime_last_selected}}</td>
+                    </tr>
+                    <tr>
+                        <td>extented time interval</td>
+                        <td  style="text-align:right">{{myDict.datetime_first_extented}} - {{myDict.datetime_last_extented}}</td>
+                    </tr>
+                    <tr>
+                        <td>number of days on those files are missing</td>
+                        <td  style="text-align:right">{{myDict.elements_gt0}} / {{myDict.total_number_elements}}</td>
+                    </tr>
+                    <tr>
+                        <td>number of days on those no files are missing</td>
+                        <td  style="text-align:right">{{myDict.elements_eq0}} / {{myDict.total_number_elements}}</td>
+                    </tr>
+                   
+                </table>
+            
+            </div> 
+            
+            <div id="container"></div>
+        </figure>
+        </div>
+    </div>
+               
+    <!--
+    place data
+    -->
+    <pre id="csv" style="display: none">Date,Day of the week,Missing files
+    {% for i, row in df.iterrows(): -%}
+        {{ row['date'].strftime('%Y%W')  }},{{row['dayofweek'] | int}},{{row['commit']}}
+    {% endfor %}
+    </pre>
+
+
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/heatmap.js"></script>
+    <script src="https://code.highcharts.com/modules/data.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+
+
+    <!--
+    create/prepare highcharts heatmap
+    -->
+    <script>
+        var weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            
+        {% set labeldates=df['date'][::7] %}
+        
+        // set labeldates ARRAY
+        var labels123=[
+        {% for labeldate in labeldates: -%}
+            {# //new Date("{{labeldate}}") -#}
+            {# Datetime reuires new compution, cause javascript starts at month 0 -#}
+            {% set Y = labeldate.strftime('%Y') -%}
+            {% set m = labeldate.strftime('%m') -%}
+            {% set d = labeldate.strftime('%d') -%}
+            new Date({{Y|int}}, {{m|int}}-1, {{d|int}})
+            {% if loop.last -%}
+            {% else -%}  
+            ,
+            {% endif -%}
+        {% endfor -%}
+        ]
+        
+        // create heatmap
+        Highcharts.chart('container', {
+        
+            data: {
+                csv: document.getElementById('csv').innerHTML
+            },
+        
+            chart: {
+                type: 'heatmap',
+                width: 1000,
+                height: 400,
+                plotBorderWidth: 1,
+                backgroundColor: 'rgba(255,2,255,0.01)',
+        
+                //events: {
                     
+                //// custom text box
+                    //render() {
+                        //var chart = this
+                        
 
-                    //if (chart.customLabel) {
-                        //chart.customLabel.destroy();
+                        //if (chart.customLabel) {
+                            //chart.customLabel.destroy();
+                        //}
+                        //chart.customLabel = chart.renderer.label(
+                            //'missed files : <b>' + {{myDict.elements_gt0}} + '/' + {{myDict.total_number_elements}} +'</b></br>' +
+                            //'d: <b>'  + {{myDict.elements_eq0}} + '/' + {{myDict.total_number_elements}} + '</b></br>' +
+                            //'selected    : '  + '<b>{{myDict.datetime_first_selected}} - ' + '{{myDict.datetime_last_selected}} </b></br>' +
+                            //'created     : '  + '<b>{{myDict.datetime_now }}' + '</b>'
+                            //,
+                            //700,0
+                        //)
+                        //.css({
+                            //color: 'rgba(0,0,0,0.4)',
+                            //fontSize: '11px',
+                            //fontFamily:'mono',
+                        //})
+                        //.attr({
+                            //fill: 'rgba(230, 230, 230, 0.05)',
+                            ////border-color:'red',
+                            //padding: 3,
+                            //r: 5,
+                            //zIndex: 6
+                        //})
+                        //.add();
+                    
                     //}
-                    //chart.customLabel = chart.renderer.label(
-                        //'missed files : <b>' + {{myDict.elements_gt0}} + '/' + {{myDict.total_number_elements}} +'</b></br>' +
-                        //'d: <b>'  + {{myDict.elements_eq0}} + '/' + {{myDict.total_number_elements}} + '</b></br>' +
-                        //'selected    : '  + '<b>{{myDict.datetime_first_selected}} - ' + '{{myDict.datetime_last_selected}} </b></br>' +
-                        //'created     : '  + '<b>{{myDict.datetime_now }}' + '</b>'
-                        //,
-                        //700,0
-                    //)
-                    //.css({
-                        //color: 'rgba(0,0,0,0.4)',
-                        //fontSize: '11px',
-                        //fontFamily:'mono',
-                    //})
-                    //.attr({
-                        //fill: 'rgba(230, 230, 230, 0.05)',
-                        ////border-color:'red',
-                        //padding: 3,
-                        //r: 5,
-                        //zIndex: 6
-                    //})
-                    //.add();
-                
                 //}
-            //}
-        },
-    
-        boost: {
-            useGPUTranslations: true
-        },
-    
-        title: {
-            text: 'Missing files',
-            align: 'left',
-            x: 60
-        },
-    
-        subtitle: {
-            text: '{{ myDict.picture_filename }}',
-            align: 'left',
-            x: 60
-        },
-    
-        
-        xAxis: {
-            title: {
-              text: 'Time [week]'
             },
-            categories: labels123,
+        
+            boost: {
+                useGPUTranslations: true
+            },
+        
+            title: {
+                text: 'Missing files',
+                align: 'left',
+                x: 60
+            },
+        
+            subtitle: {
+                text: '{{ myDict.picture_filename }}',
+                align: 'left',
+                x: 60
+            },
+        
             
-            labels: {
-                formatter: function() {
-                    if (this.isFirst) {
-                        i = -1
-                    }
-                    i++;
-                    return labels123[i].toLocaleString('default', { weekday:'long' }) + 
-                    '<br/>' + labels123[i].toLocaleDateString('fr-CA')
+            xAxis: {
+                title: {
+                  text: 'Time [week]'
                 },
-                step:4,
-                rotation: 0,
+                categories: labels123,
+                
+                labels: {
+                    formatter: function() {
+                        if (this.isFirst) {
+                            i = -1
+                        }
+                        i++;
+                        return labels123[i].toLocaleString('default', { weekday:'long' }) + 
+                        '<br/>' + labels123[i].toLocaleDateString('fr-CA')
+                    },
+                    step:4,
+                    rotation: 0,
+                },
             },
-        },
-    
-        yAxis: {
-            title: {
-                text: 'Day of the week'
+        
+            yAxis: {
+                title: {
+                    text: 'Day of the week'
+                },
+                labels: {
+                    format: '{value}'
+                },
+                minPadding: 0,
+                maxPadding: 0,
+                startOnTick: false,
+                endOnTick: false,
+                tickWidth: 1,
+                min: 0,
+                max: 6,
+                reversed: false,
+                categories: weekdays
             },
-            labels: {
-                format: '{value}'
+        
+            colorAxis: {
+                stops: [
+                    [0, 'limegreen'],
+                    [0.01, 'yellow'],
+                    [0.50, 'orange'],
+                    [1, 'red']
+                ],
+                min: 0,
+                max: 1,
+                reversed: false,
+                categories: ['less','more'],
+                
             },
-            minPadding: 0,
-            maxPadding: 0,
-            startOnTick: false,
-            endOnTick: false,
-            tickWidth: 1,
-            min: 0,
-            max: 6,
-            reversed: false,
-            categories: weekdays
-        },
-    
-        colorAxis: {
-            stops: [
-                [0, 'limegreen'],
-                [0.01, 'yellow'],
-                [0.50, 'orange'],
-                [1, 'red']
-            ],
-            min: 0,
-            max: 1,
-            reversed: false,
-            categories: ['less','more'],
             
-        },
+            
+            tooltip: {
+                useHTML: true,
+                formatter: function () {
+                    return '<table>' +
+                            '<tr><td>Year & week </td><td>' + this.point.x.toString().substring(0,4) + ' & ' + this.point.x.toString().substring(4,6) +'</td></tr>' +
+                            '<tr><td>Day of week </td><td>' + weekdays[this.point.y] + '</td></tr>'+
+                            '<tr><td>Missing value</td><td>' + this.point.value + '</td></tr>' +
+                        '</table>';
+                }
+            },
+        
+            
+            series: [{
+                nullColor: 'rgb(255, 255, 255)',
+                borderColor: 'rgba(250,250,250,0.9)',
+                borderWidth: 3,
+        
+            }],
+            
+            legend: {
+                align: 'right',
+                layout: 'vertical',
+                margin: 5,
+                verticalAlign: 'top',
+                y: 80,
+                symbolHeight: 200
+            },
+            
+        
+        });
         
         
-        tooltip: {
-            useHTML: true,
-            formatter: function () {
-                return '<table>' +
-                        '<tr><td>Year & week </td><td>' + this.point.x.toString().substring(0,4) + ' & ' + this.point.x.toString().substring(4,6) +'</td></tr>' +
-                        '<tr><td>Day of week </td><td>' + weekdays[this.point.y] + '</td></tr>'+
-                        '<tr><td>Missing value</td><td>' + this.point.value + '</td></tr>' +
-                    '</table>';
+        function toggleFunction() {
+            var x = document.getElementById("myDIV");
+            if (x.style.display === "none") {
+                x.style.display = "block";
+            } else {
+                x.style.display = "none";
             }
-        },
-    
+        } 
         
-        series: [{
-            nullColor: 'rgb(255, 255, 255)',
-            borderColor: 'rgba(250,250,250,0.9)',
-            borderWidth: 3,
-    
-        }],
-        
-        legend: {
-            align: 'right',
-            layout: 'vertical',
-            margin: 5,
-            verticalAlign: 'top',
-            y: 80,
-            symbolHeight: 200
-        },
-        
-    
-    });
-    
-    
-    function toggleFunction() {
-        var x = document.getElementById("myDIV");
-        if (x.style.display === "none") {
-            x.style.display = "block";
-        } else {
-            x.style.display = "none";
-        }
-    } 
-    
-</script>
+    </script>
 
 </body>
 </html>
