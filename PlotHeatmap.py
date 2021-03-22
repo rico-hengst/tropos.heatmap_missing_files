@@ -344,8 +344,10 @@ def create_matrix_from_grouped_filled_dataframe( df_filled, myDict ):
 # In[6]:
 
 def plot_highchart(df_filled_extented, timeaxis, myDict ):
+    # get path
+    script_path = os.path.dirname( os.path.realpath(__file__) )
     
-    template = Template(open('template_jinja2.tt').read())
+    template = Template(open(script_path + '/template_jinja2.tt').read())
     
     output = template.render(df=df_filled_extented.replace(np.nan, '', regex=True),date=datetime.now(), myDict=myDict )
     
