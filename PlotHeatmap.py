@@ -240,6 +240,7 @@ def create_matrix_from_grouped_filled_dataframe( df_filled, myDict ):
     myDict['datetime_first_selected']  = df_filled['date'].iloc[0].strftime("%Y-%m-%d")
     myDict['datetime_last_selected']   = df_filled['date'].iloc[-1].strftime("%Y-%m-%d")
     
+
     df_filled_extented = df_filled.copy()
     
     # number of days to fullfill (prepend) to dataframe to start on MONDAY
@@ -294,6 +295,7 @@ def create_matrix_from_grouped_filled_dataframe( df_filled, myDict ):
 
     # set first timeaxis element to monday
     timeaxis.append( df_filled_extented['date'].iloc[0] - timedelta( days = df_filled_extented['dayofweek'].iloc[0]  )  )
+
     
 
     # loop to create array a from dataframe gf
@@ -334,6 +336,7 @@ def create_matrix_from_grouped_filled_dataframe( df_filled, myDict ):
     logging.info('The extented timespan is: ' + myDict['datetime_first_extented'] + ' - ' + myDict['datetime_last_extented'] )
     logging.info('TOTAL' + myDict['total_number_elements'])
     return npmatrix, timeaxis, df_filled_extented, myDict
+
 
 
 # ## Plot
