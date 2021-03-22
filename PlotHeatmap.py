@@ -7,6 +7,29 @@
 # # Author: Rico Hengst @tropos.de
 
 
+
+"""
+    PlotHeatmap
+
+    The module processes data and generates a heatmap, exported as png file
+
+    Parameters
+    ----------
+    myDict : Python dictionary
+        myDict['data_import_type']  : REQUIRED arg, string keywords Test|DataFrame|CSV
+        myDict['csv_filename']      : REQUIRED if myDict['data_import_type'] = CSV
+        myDict['picture_filename']  : REQUIRED string
+        
+
+    Returns
+    -------
+    Heatmap
+        as png file
+        as html file
+
+    """
+
+
 import sys
 
 
@@ -20,8 +43,14 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import matplotlib.colors
 
+try:
+    from jinja2 import Template
+except ImportError:
+    print('\nThere was no such module installed: jinja2')
+    exit()
+
 import logging
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.INFO)
 
 """Check python version"""
 python_version = platform.python_version().split(".")
@@ -43,7 +72,7 @@ def generate_test_data():
     
     
     # create panda date range: dtype: datetime64[ns]
-    date_rng = pd.date_range(start='4/4/2019', end='8/28/2019', freq='24H')
+    date_rng = pd.date_range(start='4/1/2019', end='9/5/2019', freq='24H')
 
     # create DataFrame
     df = pd.DataFrame(date_rng, columns=['date']) # dtype: datetime64[ns]
@@ -52,7 +81,7 @@ def generate_test_data():
     
 
     # add a data element
-    ts = pd.to_datetime("2019-09-09 18:47:05.487", format="%Y-%m-%d %H:%M:%S.%f")
+    ts = pd.to_datetime("2019-09-08 18:47:05.487", format="%Y-%m-%d %H:%M:%S.%f")
     df =df.append({'date' : ts , 'missing_files_intern' : 1},ignore_index=True)
 
     # get header name
@@ -199,67 +228,133 @@ def group_fill_data( df ):
 # In[5]:
 
 
-def create_matrix_from_grouped_filled_dataframe( df_filled ):
+def create_matrix_from_grouped_filled_dataframe( df_filled, myDict ):
     
     '''
     Returns a matrix and a time axis
 
         Input: df_filled
+        
     '''
     
-    logging.info('The filled DataFrame will be transformed to a matrix(height=7days, width=number of week in DataFrame')
+    myDict['datetime_first_selected']  = df_filled['date'].iloc[0].strftime("%Y-%m-%d")
+    myDict['datetime_last_selected']   = df_filled['date'].iloc[-1].strftime("%Y-%m-%d")
+    
+    df_filled_extented = df_filled.copy()
+    
+    # number of days to fullfill (prepend) to dataframe to start on MONDAY
+    prepend_number = int(df_filled['dayofweek'][0]);
+    
 
-    # transform DataFrame gf to an matrix 
+    # number of days to fullfill (append) to dataframe to end on SUNDAY
+    append_number = 6 - int( df_filled['dayofweek'][  len(df_filled.index) - 1 ] );
+    
 
-    # generate a nan numpy matrix
-    delta = df_filled['date'][len(df_filled.index)-1] - df_filled['date'][0]
+    # prepend rows to start on prevoius MONDAY
+    for i in range(0, prepend_number):
+        # get date in loop
+        d = df_filled['date'][0] - timedelta(days=i+1)
+        
+        new_row = {'date':d, 'commit':np.nan, 'dayofweek':d.weekday(), 'info':'prepend'} # use weeekday instead dayofweek, cause its a panda timestamp
+        df_filled_extented = df_filled_extented.append(new_row, ignore_index=True)
+        
+    # append rows to end on next SUNDAY
+    for i in range(0, append_number):
+        # get date in loop
+        d = df_filled['date'][ len(df_filled.index) - 1 ] + timedelta(days=i+1)
+        
+        new_row = {'date':d, 'commit':np.nan, 'dayofweek':d.weekday(), 'info':'append'} # use weeekday instead dayofweek, cause its a panda timestamp
+        df_filled_extented = df_filled_extented.append(new_row, ignore_index=True)
+
+    
+    # Sort by data
+    df_filled_extented.sort_values('date',ascending = True, inplace=True)
+    
+    # Drop former default index, automatic add new default index
+    df_filled_extented.reset_index(drop=True,inplace=True)
+
+    
+    # delta timestamp duration
+    # delta = df_filled_extented['date'][len(df_filled_extented.index)-1] - df_filled_extented['date'][0]
+    delta = df_filled_extented['date'].iloc[-1] - df_filled_extented['date'].iloc[0]
+    
+
 
     height = 7
-    width = int(delta.days/7 + 2)
+    width = int(delta.days/height+1)
+    
+    # transform DataFrame gf to an matrix 
+    logging.info('The filled DataFrame will be transformed to a matrix (height=days, width=number of week in DataFrame) ' + str(height) + ' x ' + str(width) )
+    
+    # generate a nan numpy matrix
     npmatrix = np.full([height, width], np.nan)
 
     # add vector for label xaxis
     timeaxis = []
 
     # set first timeaxis element to monday
-    timeaxis.append( df_filled['date'][0] - timedelta( days = df_filled['dayofweek'][0]  )  )
+    timeaxis.append( df_filled_extented['date'].iloc[0] - timedelta( days = df_filled_extented['dayofweek'].iloc[0]  )  )
+    
 
     # loop to create array a from dataframe gf
     ii = None
     for iweek in range( width ):
 
         # add eleement to timeaxis each week add a "monday" 
-        if ( ii != None and ii < len(df_filled.date)-1 ):
+        if ( ii != None and ii < len(df_filled_extented.date)-1 ):
             # last valid ii -> = Sunday, so add + 1
-            timeaxis.append(df_filled.date[ii+1])
-            #print(timeaxis[-1].strftime( "%A     --- %c"))
+            timeaxis.append(df_filled_extented.date[ii+1])
 
         # weekday iterating
         for iweekday in range( height ):
 
             # start ii index
             if ( ii == None ):
-                if ( iweekday == df_filled['dayofweek'][0] ):
+                if ( iweekday == df_filled_extented['dayofweek'].iloc[0] ):
                     ii = -1
 
             # add gf value to array    
-            if ( ii != None and ii < len(df_filled.index)-1 ):
+            if ( ii != None and ii < len(df_filled_extented.index)-1 ):
                 ii = ii + 1
-                npmatrix[iweekday,iweek] = df_filled['commit'][ii]
+                npmatrix[iweekday,iweek] = df_filled_extented['commit'].iloc[ii]
+              
                 
-    return npmatrix, timeaxis
+    # add metadata
+    myDict['elements_gt0']            = np.count_nonzero( npmatrix[~np.isnan(npmatrix)] > 0 )
+    myDict['elements_eq0']            = np.count_nonzero( npmatrix[~np.isnan(npmatrix)] == 0 )
+    myDict['total_number_elements']   = str(np.size(npmatrix))
+    myDict['datetime_now']            = datetime.now().strftime("%Y-%m-%d")
+    myDict['datetime_first_extented']   = df_filled_extented['date'].iloc[0].strftime("%Y-%m-%d")
+    myDict['datetime_last_extented'] = df_filled_extented['date'].iloc[-1].strftime("%Y-%m-%d")
+    myDict['datetime_first_timeaxis']  = timeaxis[0].strftime("%Y-%m-%d")
+    myDict['datetime_last_timeaxist']   = timeaxis[-1].strftime("%Y-%m-%d")
+    
+    # logging
+    logging.info('The selected timespan is: ' + myDict['datetime_first_selected'] + ' - ' + myDict['datetime_last_selected'] )
+    logging.info('The extented timespan is: ' + myDict['datetime_first_extented'] + ' - ' + myDict['datetime_last_extented'] )
+    logging.info('TOTAL' + myDict['total_number_elements'])
+    return npmatrix, timeaxis, df_filled_extented, myDict
 
 
 # ## Plot
 
 # In[6]:
 
+def plot_highchart(df_filled_extented, timeaxis, myDict ):
+    
+    template = Template(open('template_jinja2.tt').read())
+    
+    output = template.render(df=df_filled_extented.replace(np.nan, '', regex=True),date=datetime.now(), myDict=myDict )
+    
+    with open(myDict['picture_filename'] + '.html', 'w') as f:
+        f.write(output)
 
-def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
+
+def plot_matrix( npmatrix, timeaxis, org_header, myDict ):
     
     logging.info('Plot the data')
     
-    picture_filename = picture_filename + '.png'
+    picture_filename = myDict['picture_filename'] + '.png'
 
     # https://matplotlib.org/gallery/images_contours_and_fields/pcolor_demo.html#sphx-glr-gallery-images-contours-and-fields-pcolor-demo-py
     # https://stackoverflow.com/questions/52626103/custom-colormap
@@ -311,13 +406,9 @@ def plot_matrix( npmatrix, timeaxis, org_header, picture_filename ):
     # Add text
     """Add figure creating timestamp"""
     """https://riptutorial.com/matplotlib/example/16030/coordinate-systems-and-text"""
-    # some statistics
-    val_gt0 = np.count_nonzero( npmatrix[~np.isnan(npmatrix)] > 0 )
-    val_eq0 = np.count_nonzero( npmatrix[~np.isnan(npmatrix)] == 0 )
-
     
     my_txt_legend_1 = ["Figure generated", "Name of file", "Number of days without missing data", "Number of days, where data are missed"]
-    my_txt_legend_2 = [str(datetime.now().strftime("%Y-%m-%d %H:%M")), picture_filename, str( val_eq0 ), str( val_gt0 ) ]
+    my_txt_legend_2 = [str(myDict['datetime_now']), picture_filename, str( myDict['elements_eq0'] ) + ' of ' + str(myDict['total_number_elements']), str( myDict['elements_gt0'] ) + ' of ' + str(myDict['total_number_elements']) ]
     
     for index, item in enumerate(my_txt_legend_1):
         yy = 0.1 - (index+1)/50
@@ -445,9 +536,11 @@ def main( myDict ):
     # generate filled dataframe
     df_filled = group_fill_data( df )
     
-    npmatrix, timeaxis = create_matrix_from_grouped_filled_dataframe( df_filled )
+    npmatrix, timeaxis, df_filled_extented, myDict = create_matrix_from_grouped_filled_dataframe( df_filled, myDict )
     
-    plot_matrix( npmatrix, timeaxis, org_header, myDict['picture_filename'] )
+    plot_matrix( npmatrix, timeaxis, org_header, myDict )
+    
+    plot_highchart( df_filled_extented, timeaxis, myDict )
 
 
 if __name__ == '__main__':
