@@ -19,6 +19,7 @@ This package is **prepared for visualization** only.
 
 
 **Input**
+
 The data can be provided in two different ways:
 * **data_input_type = CSV** as two column comma separated csv-file, with a single line header with the names of the columns
     * the data column1 should be consists of a date or a datetime string
@@ -52,6 +53,7 @@ In general
 
 
 **Output**
+
 The script generates a Heatmap of missing files. The Heatmap will be provided
 * as rendered png-file and additionally
 * as html-file using the javascript highcharts library.
