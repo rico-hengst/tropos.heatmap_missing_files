@@ -167,7 +167,7 @@ https://jsfiddle.net/BlackLabel/z0ej46sr/
     -->
     <pre id="csv" style="display: none">Date,Day of the week,Missing files
     {% for i, row in df.iterrows(): -%}
-        {{ row['date'].strftime('%Y%W')  }},{{row['dayofweek'] | int}},{{row['commit']}}
+        {{  (i/7)|int  }},{{row['dayofweek'] | int}},{{row['commit'] }}
     {% endfor %}
     </pre>
 
@@ -328,7 +328,7 @@ https://jsfiddle.net/BlackLabel/z0ej46sr/
                 useHTML: true,
                 formatter: function () {
                     return '<table>' +
-                            '<tr><td>Year & week </td><td>' + this.point.x.toString().substring(0,4) + ' & ' + this.point.x.toString().substring(4,6) +'</td></tr>' +
+                            '<tr><td>Date first row </td><td>' + labels123[this.point.x].toLocaleDateString('fr-CA') +'</td></tr>' +
                             '<tr><td>Day of week </td><td>' + weekdays[this.point.y] + '</td></tr>'+
                             '<tr><td>Missing value</td><td>' + this.point.value + '</td></tr>' +
                         '</table>';
