@@ -264,7 +264,7 @@ https://jsfiddle.net/BlackLabel/z0ej46sr/
             },
         
             subtitle: {
-                text: '{{ myDict.picture_filename }}',
+                text: '{{ myDict.data_source }}',
                 align: 'left',
                 x: 60
             },
