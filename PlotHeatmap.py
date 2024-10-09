@@ -19,6 +19,7 @@
         myDict['data_import_type']  : REQUIRED arg, string keywords Test|DataFrame|CSV
         myDict['csv_filename']      : REQUIRED if myDict['data_import_type'] = CSV
         myDict['picture_filename']  : REQUIRED string
+        myDict['description']       : NICE2HAVE string
         
 
     Returns
@@ -412,8 +413,8 @@ def plot_matrix( npmatrix, timeaxis, org_header, myDict ):
     """Add figure creating timestamp"""
     """https://riptutorial.com/matplotlib/example/16030/coordinate-systems-and-text"""
     
-    my_txt_legend_1 = ["Figure generated", "Name of file", "Number of days without missing data", "Number of days, where data are missed"]
-    my_txt_legend_2 = [str(myDict['datetime_now']), picture_filename, str( myDict['elements_eq0'] ) + ' of ' + str(myDict['total_number_elements']), str( myDict['elements_gt0'] ) + ' of ' + str(myDict['total_number_elements']) ]
+    my_txt_legend_1 = ["Figure generated", "Description", "Number of days without missing data", "Number of days, where data are missed"]
+    my_txt_legend_2 = [str(myDict['datetime_now']), myDict['description'], str( myDict['elements_eq0'] ) + ' of ' + str(myDict['total_number_elements']), str( myDict['elements_gt0'] ) + ' of ' + str(myDict['total_number_elements']) ]
     
     for index, item in enumerate(my_txt_legend_1):
         yy = 0.1 - (index+1)/50
