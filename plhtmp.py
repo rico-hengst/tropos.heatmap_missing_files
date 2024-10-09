@@ -16,9 +16,10 @@ import PlotHeatmap
 print('PlotHeatmap, using CSV data')
 PlotHeatmap.main(
 { 
-    'data_import_type' : 'CSV', # Test|DataFrame|CSV
-    'picture_filename' : 'doc/mypic_testfile_csv',
-    'csv_filename' : 'doc/test_missing_files.csv'
+    'data_import_type'  : 'CSV', # Test|DataFrame|CSV
+    'picture_filename'  : 'doc/mypic_testfile_csv',
+    'csv_filename'      : 'doc/test_missing_files.csv',
+    'data_source'       : '/datsource/csv'
 }
 )
 
@@ -26,8 +27,9 @@ PlotHeatmap.main(
 print('PlotHeatmap, using local defined data')
 PlotHeatmap.main(
 { 
-    'data_import_type' : 'Test', # Test|DataFrame|CSV
-    'picture_filename' : 'doc/mypic_local_dataframe',
+    'data_import_type'  : 'Test', # Test|DataFrame|CSV
+    'picture_filename'  : 'doc/mypic_local_dataframe',
+    'data_source'       : '/datsource/localdataframe'
 
 }
 )
@@ -57,9 +59,10 @@ df = df.sort_index(ascending=1)
 print('PlotHeatmap, using data from DataFrame')
 PlotHeatmap.main(
 { 
-    'data_import_type' : 'DataFrame', # Test|DataFrame|CSV
-    'picture_filename' : 'doc/mypic_external_dataframe',
-    #'csv_filename' : 'test_missing_files.csv',
-    'DataFrame' : df
+    'data_import_type'  : 'DataFrame', # Test|DataFrame|CSV
+    'picture_filename'  : 'doc/mypic_external_dataframe',
+    #'csv_filename'     : 'test_missing_files.csv',
+    'DataFrame'         : df,
+    'data_source'       : '/datsource/external_df'
 }
 )
