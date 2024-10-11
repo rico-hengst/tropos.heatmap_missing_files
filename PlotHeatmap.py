@@ -407,11 +407,11 @@ def plot_matrix( npmatrix, timeaxis, org_header, myDict ):
     """Add figure creating timestamp"""
     """https://riptutorial.com/matplotlib/example/16030/coordinate-systems-and-text"""
     
-    my_txt_legend_1 = ["Figure generated", "Description", "Number of days without missing data", "Number of days, where data are missed"]
-    my_txt_legend_2 = [str(myDict['datetime_now']), myDict['_optional_info'].get('description', ''), str( myDict['elements_eq0'] ) + ' of ' + str(myDict['total_number_elements']), str( myDict['elements_gt0'] ) + ' of ' + str(myDict['total_number_elements']) ]
+    my_txt_legend_1 = ["Key","Description","Figure generated", "Number of days without missing data", "Number of days, where data are missed"]
+    my_txt_legend_2 = [myDict.get('_optional_info', {}).get('keyword', ''), myDict.get('_optional_info', {}).get('description', ''), str(myDict['datetime_now']), str( myDict['elements_eq0'] ) + ' of ' + str(myDict['total_number_elements']), str( myDict['elements_gt0'] ) + ' of ' + str(myDict['total_number_elements']) ]
     
     for index, item in enumerate(my_txt_legend_1):
-        yy = 0.1 - (index+1)/50
+        yy = 0.15 - (index+1)/50
         plt.text(0.01, yy, my_txt_legend_1[index], fontsize=fontsize_default-3, ha='left', va='baseline', transform=fig.transFigure)
         plt.text(0.2, yy, my_txt_legend_2[index], fontsize=fontsize_default-3, ha='left', va='baseline', transform=fig.transFigure)
     

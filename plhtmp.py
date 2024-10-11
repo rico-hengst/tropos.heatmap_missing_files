@@ -19,7 +19,11 @@ PlotHeatmap.main(
     'data_import_type'  : 'CSV', # Test|DataFrame|CSV
     'picture_filename'  : 'doc/mypic_testfile_csv',
     'csv_filename'      : 'doc/test_missing_files.csv',
-    'data_source'       : '/datsource/csv'
+    'data_source'       : '/datsource/csv',
+    '_optional_info'    : {
+        'description'   : 'description of the dataset',
+        'keyword'       : 'keyword of dataset CSV'
+    }
 }
 )
 
@@ -29,8 +33,11 @@ PlotHeatmap.main(
 { 
     'data_import_type'  : 'Test', # Test|DataFrame|CSV
     'picture_filename'  : 'doc/mypic_local_dataframe',
-    'data_source'       : '/datsource/localdataframe'
-
+    'data_source'       : '/datsource/localdataframe',
+      '_optional_info'    : {
+        'description'   : 'description of the dataset',
+        'keyword'       : 'keyword of dataset Test'
+    }
 }
 )
 
@@ -63,6 +70,10 @@ PlotHeatmap.main(
     'picture_filename'  : 'doc/mypic_external_dataframe',
     #'csv_filename'     : 'test_missing_files.csv',
     'DataFrame'         : df,
-    'data_source'       : '/datsource/external_df'
+    'data_source'       : '/datsource/external_df',
+      '_optional_info'    : {
+        'description'   : 'description of the dataset',
+        'keyword'       : 'keyword of dataset Dataframe'
+    }
 }
 )

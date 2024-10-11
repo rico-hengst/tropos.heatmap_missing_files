@@ -264,7 +264,7 @@ https://jsfiddle.net/BlackLabel/z0ej46sr/
             },
         
             subtitle: {
-                text: '{{ myDict._optional_info.keyword }}',
+                text: '{% if '_optional_info' in myDict %} {{ myDict._optional_info.keyword }} {% endif %}',
                 align: 'left',
                 x: 60
             },
