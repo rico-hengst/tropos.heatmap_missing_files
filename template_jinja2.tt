@@ -10,7 +10,7 @@ https://jsfiddle.net/BlackLabel/z0ej46sr/
 <html lang="de">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <title>Heatmap of missing files</title>
+    <title>Heatmap of Availability Status</title>
        
     <style>
         /*
@@ -258,13 +258,13 @@ https://jsfiddle.net/BlackLabel/z0ej46sr/
             },
         
             title: {
-                text: 'Missing files',
+                text: 'Availability Status',
                 align: 'left',
                 x: 60
             },
         
             subtitle: {
-                text: '{{ myDict.data_source }}',
+                text: '{% if '_optional_info' in myDict %} {{ myDict._optional_info.keyword }} {% endif %}',
                 align: 'left',
                 x: 60
             },
@@ -311,15 +311,14 @@ https://jsfiddle.net/BlackLabel/z0ej46sr/
             colorAxis: {
                 stops: [
                     [0, 'limegreen'],
-                    [0.01, 'yellow'],
+                    [0.02, 'yellow'],
                     [0.50, 'orange'],
                     [1, 'red']
                 ],
                 min: 0,
                 max: 1,
                 reversed: false,
-                categories: ['less','more'],
-                
+                categories: ['more','less']
             },
             
             
