@@ -19,7 +19,7 @@
         myDict['data_import_type']  : REQUIRED arg, string keywords Test|DataFrame|CSV
         myDict['csv_filename']      : REQUIRED if myDict['data_import_type'] = CSV
         myDict['picture_filename']  : REQUIRED string
-        myDict['description']       : NICE2HAVE string
+        myDict['_optional_info']    : NICE2HAVE Dict of infos
         
 
     Returns
@@ -180,9 +180,12 @@ def group_fill_data( df ):
     
     '''
     Returns a new DataFrame, data are grouped by date and data gaps are NaN filled
+    Add NaN if running date > now
     '''
 
     logging.info('Original data will be grouped by dates')
+    
+    now = datetime.now() 
 
     # group data to a new datatframe
     df_grouped = df.groupby( df['date'].dt.strftime('%Y-%m-%d') ).agg({ 'commit':['sum', 'mean', 'max'], 'week':'first', 'dayofweek':'first', 'week_in_year':'first' })
@@ -217,7 +220,13 @@ def group_fill_data( df ):
         #delta = gf.date[ii+1] - gf.date[ii]
         if ( df_filled.date[ii] == df_grouped.index[jj] ):
             #print('times mated: ' + str(gf.date[ii]) + '    ' + str(df2.index[jj]) + '   ' + str(df2['commit']['mean'][jj])  )
-            df_filled.at[ii, 'commit'] = df_grouped['commit']['mean'][jj]
+            
+            # set None if date > now
+            if ( df_filled.date[ii] > datetime.now() ):
+                df_filled.at[ii, 'commit'] = None
+            else:
+                df_filled.at[ii, 'commit'] = df_grouped['commit']['mean'][jj]
+            
             jj=jj+1
     
     
@@ -225,10 +234,6 @@ def group_fill_data( df ):
 
 
 # ## Sort DataFrame to matrix
-
-# In[5]:
-
-
 def create_matrix_from_grouped_filled_dataframe( df_filled, myDict ):
     
     '''
@@ -342,8 +347,6 @@ def create_matrix_from_grouped_filled_dataframe( df_filled, myDict ):
 
 # ## Plot
 
-# In[6]:
-
 def plot_highchart(df_filled_extented, timeaxis, myDict ):
     # get path
     script_path = os.path.dirname( os.path.realpath(__file__) )
@@ -413,11 +416,11 @@ def plot_matrix( npmatrix, timeaxis, org_header, myDict ):
     """Add figure creating timestamp"""
     """https://riptutorial.com/matplotlib/example/16030/coordinate-systems-and-text"""
     
-    my_txt_legend_1 = ["Figure generated", "Description", "Number of days without missing data", "Number of days, where data are missed"]
-    my_txt_legend_2 = [str(myDict['datetime_now']), myDict.get('description', ''), str( myDict['elements_eq0'] ) + ' of ' + str(myDict['total_number_elements']), str( myDict['elements_gt0'] ) + ' of ' + str(myDict['total_number_elements']) ]
+    my_txt_legend_1 = ["Key","Description","Figure generated", "Number of days without missing data", "Number of days, where data are missed"]
+    my_txt_legend_2 = [myDict.get('_optional_info', {}).get('keyword', ''), myDict.get('_optional_info', {}).get('description', ''), str(myDict['datetime_now']), str( myDict['elements_eq0'] ) + ' of ' + str(myDict['total_number_elements']), str( myDict['elements_gt0'] ) + ' of ' + str(myDict['total_number_elements']) ]
     
     for index, item in enumerate(my_txt_legend_1):
-        yy = 0.1 - (index+1)/50
+        yy = 0.15 - (index+1)/50
         plt.text(0.01, yy, my_txt_legend_1[index], fontsize=fontsize_default-3, ha='left', va='baseline', transform=fig.transFigure)
         plt.text(0.2, yy, my_txt_legend_2[index], fontsize=fontsize_default-3, ha='left', va='baseline', transform=fig.transFigure)
     
@@ -493,12 +496,13 @@ def plot_matrix( npmatrix, timeaxis, org_header, myDict ):
 
     #cbar = fig.colorbar(c, ticks=[0, 1], ax=ax0, orientation="horizontal", pad=0.3)
     #cbar = fig.colorbar(c, ticks=[np.nanmin(npmatrix), np.nanmax(npmatrix)], ax=ax0, shrink=0.4)
-    cbar = fig.colorbar(c, ticks=[0, 1], ax=ax0, shrink=0.4)
+    cbar = fig.colorbar(c, ticks=[0, 0.45, 0.9], ax=ax0, shrink=0.4)
 
 
-    cbar.ax.set_yticklabels(['less', 'more'], fontsize=fontsize_default-1)  # vertically oriented colorbar
+    #cbar.ax.set_yticklabels(['less', 'more'], fontsize=fontsize_default-1)  # vertically oriented colorbar
+    cbar.ax.set_yticklabels(['complete', 'partly', 'less'], fontsize=fontsize_default-1)  # vertically oriented colorbar
     #cbar.set_label(label='Temperature', fontsize=8, weight='bold')
-    cbar.set_label(label=title1, labelpad=-20, y=0.5, rotation=90, fontsize=fontsize_default, weight='bold')
+    cbar.set_label(label=title1, labelpad=-75, y=0.5, rotation=90, fontsize=fontsize_default, weight='bold')
 
     # save figure
     #plt.savefig(facecolor="none",dpi=200,fname=picture_filename)
@@ -508,10 +512,6 @@ def plot_matrix( npmatrix, timeaxis, org_header, myDict ):
     plt.close(fig)
 
 
-
-
-
-# In[7]:
 
 
 def main( myDict ):
